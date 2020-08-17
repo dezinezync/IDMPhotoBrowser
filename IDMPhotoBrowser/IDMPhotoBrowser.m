@@ -11,7 +11,7 @@
 #import "IDMZoomingScrollView.h"
 #import "IDMUtils.h"
 
-#import "pop/POP.h"
+//#import "pop/POP.h"
 
 #ifndef IDMPhotoBrowserLocalizedStrings
 #define IDMPhotoBrowserLocalizedStrings(key) \
@@ -1424,17 +1424,17 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
 - (void)animateView:(UIView *)view toFrame:(CGRect)frame completion:(void (^)(void))completion
 {
-	POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPViewFrame];
-	[animation setSpringBounciness:6];
-	[animation setDynamicsMass:1];
-    [animation setToValue:[NSValue valueWithCGRect:frame]];
-	[view pop_addAnimation:animation forKey:nil];
-
-    if (completion)
-	{
-		[animation setCompletionBlock:^(POPAnimation *animation, BOOL finished) {
-			completion();
-		}];
-	}
+//	POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPViewFrame];
+//	[animation setSpringBounciness:6];
+//	[animation setDynamicsMass:1];
+//    [animation setToValue:[NSValue valueWithCGRect:frame]];
+//	[view pop_addAnimation:animation forKey:nil];
+//
+//    if (completion)
+//	{
+//		[animation setCompletionBlock:^(POPAnimation *animation, BOOL finished) {
+//			completion();
+//		}];
+//	}
 }
 @end

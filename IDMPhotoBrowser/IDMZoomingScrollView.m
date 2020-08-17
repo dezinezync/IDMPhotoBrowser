@@ -69,14 +69,14 @@
         }
         
         // Progress view
-        _progressView = [[DACircularProgressView alloc] initWithFrame:CGRectMake((screenWidth-35.)/2., (screenHeight-35.)/2, 35.0f, 35.0f)];
-        [_progressView setProgress:0.0f];
-        _progressView.tag = 101;
-        _progressView.thicknessRatio = 0.1;
-        _progressView.roundedCorners = NO;
-        _progressView.trackTintColor    = browser.trackTintColor    ? self.photoBrowser.trackTintColor    : [UIColor colorWithWhite:0.2 alpha:1];
-        _progressView.progressTintColor = browser.progressTintColor ? self.photoBrowser.progressTintColor : [UIColor colorWithWhite:1.0 alpha:1];
-        [self addSubview:_progressView];
+//        _progressView = [[DACircularProgressView alloc] initWithFrame:CGRectMake((screenWidth-35.)/2., (screenHeight-35.)/2, 35.0f, 35.0f)];
+//        [_progressView setProgress:0.0f];
+//        _progressView.tag = 101;
+//        _progressView.thicknessRatio = 0.1;
+//        _progressView.roundedCorners = NO;
+//        _progressView.trackTintColor    = browser.trackTintColor    ? self.photoBrowser.trackTintColor    : [UIColor colorWithWhite:0.2 alpha:1];
+//        _progressView.progressTintColor = browser.progressTintColor ? self.photoBrowser.progressTintColor : [UIColor colorWithWhite:1.0 alpha:1];
+//        [self addSubview:_progressView];
         
 		// Setup
 		self.backgroundColor = [UIColor clearColor];
@@ -127,7 +127,7 @@
 		if (img) {
             // Hide ProgressView
             //_progressView.alpha = 0.0f;
-            [_progressView removeFromSuperview];
+//            [_progressView removeFromSuperview];
             
             // Set image
 			_photoImageView.image = img;
@@ -147,7 +147,7 @@
 			// Hide image view
 			_photoImageView.hidden = YES;
             
-            _progressView.alpha = 1.0f;
+//            _progressView.alpha = 1.0f;
 		}
         
 		[self setNeedsLayout];
@@ -157,16 +157,16 @@
 - (void)setProgress:(CGFloat)progress forPhoto:(IDMPhoto*)photo {
     IDMPhoto *p = (IDMPhoto*)self.photo;
 
-    if ([photo.photoURL.absoluteString isEqualToString:p.photoURL.absoluteString]) {
-        if (_progressView.progress < progress) {
-            [_progressView setProgress:progress animated:YES];
-        }
-    }
+//    if ([photo.photoURL.absoluteString isEqualToString:p.photoURL.absoluteString]) {
+//        if (_progressView.progress < progress) {
+//            [_progressView setProgress:progress animated:YES];
+//        }
+//    }
 }
 
 // Image failed so just show black!
 - (void)displayImageFailure {
-    [_progressView removeFromSuperview];
+//    [_progressView removeFromSuperview];
 }
 
 #pragma mark - Setup
