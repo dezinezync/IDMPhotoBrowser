@@ -557,8 +557,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
 - (UIButton*)customToolbarButtonImage:(UIImage*)image imageSelected:(UIImage*)selectedImage action:(SEL)action {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:image forState:UIControlStateNormal];
-    [button setImage:selectedImage forState:UIControlStateDisabled];
+    [button setImage:image forState:UIControlStateDisabled];
+    [button setImage:selectedImage forState:UIControlStateNormal];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     [button setContentMode:UIViewContentModeCenter];
     [button setFrame:[self getToolbarButtonFrame:image]];
@@ -1369,15 +1369,17 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 				selfBlock.activityViewController = nil;
 			}];
 
-			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-				[self presentViewController:self.activityViewController animated:YES completion:nil];
+			if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+                
+                UIPopoverPresentationController *popover = self.activityViewController.popoverPresentationController;
+                
+                popover.sourceView = sender;
+                popover.sourceRect = [(UIButton *)sender frame];
+                
+				
 			}
-			else { // iPad
-				UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:self.activityViewController];
-				[popover presentPopoverFromRect:CGRectMake(self.view.frame.size.width/2, self.view.frame.size.height/4, 0, 0)
-										 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny
-									   animated:YES];
-			}
+            
+            [self presentViewController:self.activityViewController animated:YES completion:nil];
         }
         else
         {

@@ -40,9 +40,9 @@
 @property (nonatomic) BOOL displayArrowButton;
 @property (nonatomic) BOOL displayActionButton;
 @property (nonatomic, strong) NSArray *actionButtonTitles;
-@property (nonatomic, weak) UIImage *leftArrowImage, *leftArrowSelectedImage;
-@property (nonatomic, weak) UIImage *rightArrowImage, *rightArrowSelectedImage;
-@property (nonatomic, weak) UIImage *actionButtonImage, *actionButtonSelectedImage;
+@property (nonatomic, copy) UIImage *leftArrowImage, *leftArrowSelectedImage;
+@property (nonatomic, copy) UIImage *rightArrowImage, *rightArrowSelectedImage;
+@property (nonatomic, copy) UIImage *actionButtonImage, *actionButtonSelectedImage;
 
 // View customization
 @property (nonatomic) BOOL displayDoneButton;
