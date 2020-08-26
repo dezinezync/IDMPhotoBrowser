@@ -1367,12 +1367,17 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 				selfBlock.activityViewController = nil;
 			}];
 
-			if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone) {
+			if (sender != nil && self.traitCollection.userInterfaceIdiom != UIUserInterfaceIdiomPhone) {
                 
                 UIPopoverPresentationController *popover = self.activityViewController.popoverPresentationController;
                 
-                popover.sourceView = sender;
-                popover.sourceRect = [(UIButton *)sender frame];
+                if ([sender isKindOfClass:UIBarButtonItem.class] == YES) {
+                    popover.barButtonItem = sender;
+                }
+                else {
+                    popover.sourceView = sender;
+                    popover.sourceRect = [(UIButton *)sender frame];
+                }
                 
 				
 			}
