@@ -200,8 +200,10 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 		if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
             self.automaticallyAdjustsScrollViewInsets = NO;
 		}
+        
+        UIWindowScene *scene = UIApplication.sharedApplication.connectedScenes.allObjects.firstObject;
 		
-        _applicationWindow = [[[UIApplication sharedApplication] delegate] window];
+        _applicationWindow = [scene windows].firstObject;
 		self.modalPresentationStyle = UIModalPresentationCustom;
 		self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 		self.modalPresentationCapturesStatusBarAppearance = YES;
