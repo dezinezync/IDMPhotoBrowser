@@ -155,7 +155,7 @@
 }
 
 - (void)setProgress:(CGFloat)progress forPhoto:(IDMPhoto*)photo {
-    IDMPhoto *p = (IDMPhoto*)self.photo;
+//    IDMPhoto *p = (IDMPhoto*)self.photo;
 
 //    if ([photo.photoURL.absoluteString isEqualToString:p.photoURL.absoluteString]) {
 //        if (_progressView.progress < progress) {

@@ -197,11 +197,11 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
         _doneButtonSize = CGSizeMake(55.f, 26.f);
 
-		if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
-            self.automaticallyAdjustsScrollViewInsets = NO;
+		if ([self respondsToSelector:@selector(contentInsetAdjustmentBehavior)]) {
+            [(UIScrollView *)self setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
 		}
         
-        UIWindowScene *scene = UIApplication.sharedApplication.connectedScenes.allObjects.firstObject;
+        UIWindowScene *scene = (UIWindowScene *)(UIApplication.sharedApplication.connectedScenes.allObjects.firstObject);
 		
         _applicationWindow = [scene windows].firstObject;
 		self.modalPresentationStyle = UIModalPresentationCustom;
@@ -255,6 +255,16 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     _pagingScrollView.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self releaseAllUnderlyingPhotos];
+    
+    _currentPageIndex = 0;
+    _pagingScrollView = nil;
+    _visiblePages = nil;
+    _recycledPages = nil;
+    _toolbar = nil;
+    _doneButton = nil;
+    _previousButton = nil;
+    _nextButton = nil;
+    
 }
 
 - (void)releaseAllUnderlyingPhotos {
@@ -388,10 +398,15 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     [_applicationWindow addSubview:resizableImageView];
     _senderViewForAnimation.hidden = YES;
 
-    void (^completion)() = ^() {
-        self.view.alpha = 1.0f;
-        _pagingScrollView.alpha = 1.0f;
-        resizableImageView.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
+    __weak typeof(self) wself = self;
+    
+    void (^completion)(void) = ^(void) {
+        
+        __strong typeof(wself) sself = wself;
+        
+        sself.view.alpha = 1.0f;
+        sself->_pagingScrollView.alpha = 1.0f;
+        resizableImageView.backgroundColor = [UIColor colorWithWhite:(sself->_useWhiteBackgroundColor) ? 1 : 0 alpha:1];
         [fadeView removeFromSuperview];
         [resizableImageView removeFromSuperview];
     };
@@ -450,16 +465,21 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     [_applicationWindow addSubview:resizableImageView];
     self.view.hidden = YES;
 
-    void (^completion)() = ^() {
-        _senderViewForAnimation.hidden = NO;
-        _senderViewForAnimation = nil;
-        _scaleImage = nil;
+    __weak typeof(self) wself = self;
+    
+    void (^completion)(void) = ^(void) {
+        
+        __strong typeof(wself) sself = wself;
+        
+        sself->_senderViewForAnimation.hidden = NO;
+        sself->_senderViewForAnimation = nil;
+        sself->_scaleImage = nil;
 
         [fadeView removeFromSuperview];
         [resizableImageView removeFromSuperview];
 
-        [self prepareForClosePhotoBrowser];
-        [self dismissPhotoBrowserAnimated:NO];
+        [sself prepareForClosePhotoBrowser];
+        [sself dismissPhotoBrowserAnimated:NO];
     };
 
     [UIView animateWithDuration:_animationDuration animations:^{
@@ -544,15 +564,17 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     if ([_delegate respondsToSelector:@selector(photoBrowser:willDismissAtPageIndex:)])
         [_delegate photoBrowser:self willDismissAtPageIndex:_currentPageIndex];
 
+    __weak typeof(self) wself = self;
+    
     [self dismissViewControllerAnimated:animated completion:^{
-        if ([_delegate respondsToSelector:@selector(photoBrowser:didDismissAtPageIndex:)])
-            [_delegate photoBrowser:self didDismissAtPageIndex:_currentPageIndex];
+        
+        __strong typeof(wself) sself = wself;
+        
+        if ([sself->_delegate respondsToSelector:@selector(photoBrowser:didDismissAtPageIndex:)])
+            [sself->_delegate photoBrowser:sself didDismissAtPageIndex:sself->_currentPageIndex];
 
-//		if (SYSTEM_VERSION_LESS_THAN(@"8.0"))
-//		{
-//			_applicationTopViewController.modalPresentationStyle = _previousModalPresentationStyle;
-//		}
     }];
+    
 }
 
 - (UIButton*)customToolbarButtonImage:(UIImage*)image imageSelected:(UIImage*)selectedImage action:(SEL)action {
@@ -723,7 +745,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 	[super viewWillAppear:animated];
 
     // Status Bar
-    _statusBarOriginallyHidden = [UIApplication sharedApplication].statusBarHidden;
+    _statusBarOriginallyHidden = self.view.window.windowScene.statusBarManager.isStatusBarHidden;
 
     // Update UI
 	[self hideControlsAfterDelay];
@@ -732,20 +754,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     _viewIsActive = YES;
-}
-
-// Release any retained subviews of the main view.
-- (void)viewDidUnload {
-	_currentPageIndex = 0;
-    _pagingScrollView = nil;
-    _visiblePages = nil;
-    _recycledPages = nil;
-    _toolbar = nil;
-    _doneButton = nil;
-    _previousButton = nil;
-    _nextButton = nil;
-
-    [super viewDidUnload];
 }
 
 #pragma mark - Status Bar
@@ -1262,14 +1270,21 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     for (IDMZoomingScrollView *page in _visiblePages) {
         if (page.captionView) [captionViews addObject:page.captionView];
     }
+    
+    __weak typeof(self) wself = self;
 
     // Hide/show bars
     [UIView animateWithDuration:(animated ? 0.1 : 0) animations:^(void) {
+        
+        __strong typeof(wself) sself = wself;
+        
         CGFloat alpha = hidden ? 0 : 1;
-        [self.navigationController.navigationBar setAlpha:alpha];
-        [_toolbar setAlpha:alpha];
-        [_doneButton setAlpha:alpha];
+        [sself.navigationController.navigationBar setAlpha:alpha];
+        [sself->_toolbar setAlpha:alpha];
+        [sself->_doneButton setAlpha:alpha];
+        
         for (UIView *v in captionViews) v.alpha = alpha;
+        
     } completion:^(BOOL finished) {}];
 
 	// Control hiding timer
