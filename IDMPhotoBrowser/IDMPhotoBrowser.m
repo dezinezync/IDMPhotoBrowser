@@ -579,7 +579,9 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
 - (UIButton*)customToolbarButtonImage:(UIImage*)image imageSelected:(UIImage*)selectedImage action:(SEL)action {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+#if !TARGET_OS_MACCATALYST
     [button setImage:image forState:UIControlStateDisabled];
+#endif
     [button setImage:selectedImage forState:UIControlStateNormal];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     [button setContentMode:UIViewContentModeCenter];
